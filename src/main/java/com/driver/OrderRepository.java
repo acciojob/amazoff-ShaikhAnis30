@@ -35,9 +35,7 @@ public class OrderRepository {
 
     public void addPartner(String id) {
 //        DeliveryPartner deliveryPartner = new DeliveryPartner(id);       // check
-        if(!deliveryPartnerMap.containsKey(id)) {
-            deliveryPartnerMap.put(id, new DeliveryPartner(id));
-        }
+        deliveryPartnerMap.put(id, new DeliveryPartner(id));
     }
 
 
@@ -59,26 +57,21 @@ public class OrderRepository {
     }
 
     public Order getOrderById(String orderId) {
-        if(orderMap.containsKey(orderId)) {
-            return orderMap.get(orderId);
-        }
-        return null;
+        return orderMap.get(orderId);
     }
 
     public DeliveryPartner getPartnerById(String partnerId) {
-        if(deliveryPartnerMap.containsKey(partnerId)) {
-            return deliveryPartnerMap.get(partnerId);
-        }
-        return null;
+        return deliveryPartnerMap.get(partnerId);
     }
 
     //Get number of orders assigned to given partnerId
     public int getOrderCountByPartnerId(String partnerId) {
-//        return deliveryPartnerMap.get(partnerId).getNumberOfOrders();         // check 1
-        if(partnerOrderMap.containsKey(partnerId)) {
-            return partnerOrderMap.get(partnerId).size();
-        }
-        return 0;
+        return deliveryPartnerMap.get(partnerId).getNumberOfOrders();         // check 1
+//        Integer ordersCount = 0;
+//        if(partnerOrderMap.containsKey(partnerId)) {
+//            ordersCount = partnerOrderMap.get(partnerId).size();
+//        }
+//        return ordersCount;
     }
 
 
@@ -173,7 +166,16 @@ public class OrderRepository {
         int hour = time/60;
         int min = time%60;
 
-        return hour + ":" + min;
+        String hourString = String.valueOf(hour);
+        String minString = String.valueOf(min);
+        if(hourString.length() == 1){
+            hourString = "0" + hourString;
+        }
+        if(minString.length() == 1){
+            minString = "0" + minString;
+        }
+
+        return hourString + ":" + minString;
     }
 
 
@@ -181,8 +183,10 @@ public class OrderRepository {
     public void deletePartnerById(String partnerId) {
         if(deliveryPartnerMap.containsKey(partnerId))
             deliveryPartnerMap.remove(partnerId);
-        if(partnerOrderMap.containsKey(partnerId))
+        if(partnerOrderMap.containsKey(partnerId)) {
+            partnerOrderMap.get(partnerId).clear();
             partnerOrderMap.remove(partnerId);
+        }
     }
 
 
@@ -191,10 +195,14 @@ public class OrderRepository {
         if(orderMap.containsKey(orderId))
             orderMap.remove(orderId);
 
-        for (List<String> orders : partnerOrderMap.values()) {
-            for (String order : orders) {
+        for (String partnerId : partnerOrderMap.keySet()) {
+            List<String> ordersList = partnerOrderMap.get(partnerId);
+            for (String order : ordersList) {
                 if(order.equals(orderId)) {
-                    orders.remove(order);         // check
+                    ordersList.remove(orderId);
+                    partnerOrderMap.put(partnerId, ordersList);
+                    DeliveryPartner deliveryPartner = deliveryPartnerMap.get(partnerId);
+                    deliveryPartner.setNumberOfOrders(deliveryPartner.getNumberOfOrders() - 1);
                     return;
                 }
             }

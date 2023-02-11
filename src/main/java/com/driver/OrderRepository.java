@@ -83,27 +83,27 @@ public class OrderRepository {
 
 
     //Get List of all orders assigned to given partnerId
-    public List<Order> getOrdersByPartnerId(String partnerId) {
-//        List<String> orderList = new ArrayList<>();
-//        if(partnerOrderMap.containsKey(partnerId)) {
-//            orderList = partnerOrderMap.get(partnerId);
-//        }
-//        return orderList;
-
-        List<Order> orderList = new ArrayList<>();
+    public List<String> getOrdersByPartnerId(String partnerId) {
+        List<String> orderList = new ArrayList<>();
         if(partnerOrderMap.containsKey(partnerId)) {
-            for (String orderId : partnerOrderMap.get(partnerId)) {
-                Order order = orderMap.get(orderId);
-                orderList.add(order);
-            }
+            orderList = partnerOrderMap.get(partnerId);
         }
         return orderList;
+
+//        List<Order> orderList = new ArrayList<>();
+//        if(partnerOrderMap.containsKey(partnerId)) {
+//            for (String orderId : partnerOrderMap.get(partnerId)) {
+//                Order order = orderMap.get(orderId);
+//                orderList.add(order);
+//            }
+//        }
+//        return orderList;
     }
 
 
     //Get List of all orders in the system
-    public List<Order> getAllOrders() {                        // check 2 --> for String instead of Order Object
-        return new ArrayList<>(orderMap.values());
+    public List<String> getAllOrders() {                        // check 2 --> for String instead of Order Object
+        return new ArrayList<>(orderMap.keySet());
     }
 
 

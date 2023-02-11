@@ -194,7 +194,7 @@ public class OrderRepository {
         for (List<String> orders : partnerOrderMap.values()) {
             for (String order : orders) {
                 if(order.equals(orderId)) {
-                    orders.remove(Integer.valueOf(order));         // check
+                    orders.remove(order);         // check
                     return;
                 }
             }

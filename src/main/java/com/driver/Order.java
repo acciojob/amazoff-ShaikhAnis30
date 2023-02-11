@@ -22,6 +22,9 @@ public class Order {
         this.deliveryTime = actualDeliveryTime;
     }
 
+    public Order() {
+    }
+
     public String getId() {
         return id;
     }

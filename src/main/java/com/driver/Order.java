@@ -10,9 +10,9 @@ public class Order {
 
     public Order(String id, String deliveryTime) {
 
+        this.id = id;
         // The deliveryTime has to converted from string to int and then stored in the attribute
         //deliveryTime  = HH*60 + MM
-        this.id = id;
 
         // given that each order has its delivery time in HH:MM format
         String[] arr = deliveryTime.split(":");

@@ -7,16 +7,16 @@ import java.util.*;
 @Repository
 public class OrderRepository {
     // mapped orderId to Order
-    Map<String, Order> orderMap;
+    private Map<String, Order> orderMap;
 
     // DeliveryPartner is created by id only,
 //    List<DeliveryPartner> deliveryPartner;   // wrong
 
     // map partner with its object
-    Map<String, DeliveryPartner> deliveryPartnerMap;
+    private Map<String, DeliveryPartner> deliveryPartnerMap;
 
     // mapped partnerId with all his orderIds
-    Map<String, List<String>> partnerOrderMap;
+    private Map<String, List<String>> partnerOrderMap;
 
 
     public OrderRepository() {
@@ -31,8 +31,10 @@ public class OrderRepository {
     }
 
     public void addPartner(String id) {
-//        DeliveryPartner deliveryPartner = new DeliveryPartner(id);
-        deliveryPartnerMap.put(id, new DeliveryPartner(id));
+//        DeliveryPartner deliveryPartner = new DeliveryPartner(id);       // check
+        if(!deliveryPartnerMap.containsKey(id)) {
+            deliveryPartnerMap.put(id, new DeliveryPartner(id));
+        }
     }
 
 
@@ -84,6 +86,13 @@ public class OrderRepository {
             orderList = partnerOrderMap.get(partnerId);
         }
         return orderList;
+
+//        List<Order> orderList = new ArrayList<>();
+//        if(partnerOrderMap.containsKey(partnerId)) {
+//            for (String orderId : partnerOrderMap.get(partnerId)) {
+//                Order order =
+//            }
+//        }
     }
 
 
@@ -130,12 +139,12 @@ public class OrderRepository {
         // now i have all the order id's of partnerId
 
         //Note : time is in HH:MM format, so we will first convert it into int
-        int undeliveredOrdersByPartnerId = 0;
         String[] arr = time.split(":");
         int hour = Integer.parseInt(arr[0]);
         int min = Integer.parseInt(arr[1]);
         int deliveryTime = hour * 60 + min;
 
+        int undeliveredOrdersByPartnerId = 0;
         for (String orderId : orders) {
             int orderTime = orderMap.get(orderId).getDeliveryTime();
             if(orderTime > deliveryTime) undeliveredOrdersByPartnerId++;
@@ -180,7 +189,7 @@ public class OrderRepository {
         for (List<String> orders : partnerOrderMap.values()) {
             for (String order : orders) {
                 if(order.equals(orderId)) {
-                    orders.remove(Integer.valueOf(order));
+                    orders.remove(Integer.valueOf(order));         // check
                     return;
                 }
             }

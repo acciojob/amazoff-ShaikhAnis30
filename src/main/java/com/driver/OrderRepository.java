@@ -46,11 +46,10 @@ public class OrderRepository {
     public void addOrderPartnerPair(String orderId, String partnerId) {
         if(orderMap.containsKey(orderId) && deliveryPartnerMap.containsKey(partnerId)) {
             List<String> orderList = new ArrayList<>();
-            if(partnerOrderMap.containsKey(partnerId)) {
+            if(partnerOrderMap.containsKey(partnerId))
                 orderList = partnerOrderMap.get(partnerId);
-                orderList.add(orderId);
-                countOfOrdersAssignedToAllPartners++;
-            }
+
+            orderList.add(orderId);
             partnerOrderMap.put(partnerId, orderList);
             orderAssignedToAPartner.put(orderId, partnerId); //this order is assigned to this partner
 
@@ -93,22 +92,19 @@ public class OrderRepository {
 
     //Get count of orders which are not assigned to any partner
     public int getCountOfUnassignedOrders() {
-//        int totalOrders = orderMap.size();              // check this approach
-//        int assignedOrders = 0;
-//
-//        for (String orders : partnerOrderMap.keySet()) {
-//            assignedOrders += partnerOrderMap.get(orders).size();
-//        }
-//
-//        int unassignedOrders = totalOrders - assignedOrders;
-//        return unassignedOrders;
+        int totalOrders = orderMap.size();              // check this approach
+        int assignedOrders = 0;
+
+        for (String orders : partnerOrderMap.keySet()) {
+            assignedOrders += partnerOrderMap.get(orders).size();
+        }
+
+        int unassignedOrders = totalOrders - assignedOrders;
+        return unassignedOrders;
 
 //        int totalOrders = orderMap.size();
 //        int unassignedOrders = totalOrders - orderAssignedToAPartner.size();
 //        return unassignedOrders;
-        int totalOrders = orderMap.size();
-        int unassignedOrders = totalOrders - countOfOrdersAssignedToAllPartners;
-        return unassignedOrders;
     }
 
 

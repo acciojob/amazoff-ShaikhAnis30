@@ -20,7 +20,7 @@ public class OrderRepository {
 
 //    private Map<String, List<Order>> partnerOrderObjectMap;
 
-//    int countOfOrdersAssignedToAllPartners = 0;
+    int countOfOrdersAssignedToAllPartners = 0;
 
     //for Optimization
     Map<String, String> orderAssignedToAPartner;
@@ -46,9 +46,11 @@ public class OrderRepository {
     public void addOrderPartnerPair(String orderId, String partnerId) {
         if(orderMap.containsKey(orderId) && deliveryPartnerMap.containsKey(partnerId)) {
             List<String> orderList = new ArrayList<>();
-            if(partnerOrderMap.containsKey(partnerId))
+            if(partnerOrderMap.containsKey(partnerId)) {
                 orderList = partnerOrderMap.get(partnerId);
-            orderList.add(orderId);
+                orderList.add(orderId);
+                countOfOrdersAssignedToAllPartners++;
+            }
             partnerOrderMap.put(partnerId, orderList);
             orderAssignedToAPartner.put(orderId, partnerId); //this order is assigned to this partner
 
@@ -101,8 +103,11 @@ public class OrderRepository {
 //        int unassignedOrders = totalOrders - assignedOrders;
 //        return unassignedOrders;
 
+//        int totalOrders = orderMap.size();
+//        int unassignedOrders = totalOrders - orderAssignedToAPartner.size();
+//        return unassignedOrders;
         int totalOrders = orderMap.size();
-        int unassignedOrders = totalOrders - orderAssignedToAPartner.size();
+        int unassignedOrders = totalOrders - countOfOrdersAssignedToAllPartners;
         return unassignedOrders;
     }
 

@@ -20,6 +20,7 @@ public class OrderRepository {
 
 //    private Map<String, List<Order>> partnerOrderObjectMap;
 
+    int countOfOrdersAssignedToAllPartners = 0;
 
     public OrderRepository() {
         this.orderMap = new HashMap<String, Order>();
@@ -34,7 +35,6 @@ public class OrderRepository {
     }
 
     public void addPartner(String id) {
-//        DeliveryPartner deliveryPartner = new DeliveryPartner(id);       // check
         deliveryPartnerMap.put(id, new DeliveryPartner(id));
     }
 
@@ -46,6 +46,7 @@ public class OrderRepository {
             if(partnerOrderMap.containsKey(partnerId))
                 orderList = partnerOrderMap.get(partnerId);
             orderList.add(orderId);
+            countOfOrdersAssignedToAllPartners++;
             partnerOrderMap.put(partnerId, orderList);
 
             // now i have to increase the orders count also
@@ -66,14 +67,8 @@ public class OrderRepository {
 
     //Get number of orders assigned to given partnerId
     public int getOrderCountByPartnerId(String partnerId) {
-        return deliveryPartnerMap.get(partnerId).getNumberOfOrders();         // check 1
-//        Integer ordersCount = 0;
-//        if(partnerOrderMap.containsKey(partnerId)) {
-//            ordersCount = partnerOrderMap.get(partnerId).size();
-//        }
-//        return ordersCount;
+        return deliveryPartnerMap.get(partnerId).getNumberOfOrders();
     }
-
 
     //Get List of all orders assigned to given partnerId
     public List<String> getOrdersByPartnerId(String partnerId) {
@@ -82,41 +77,17 @@ public class OrderRepository {
             orderList = partnerOrderMap.get(partnerId);
         }
         return orderList;
-
-//        List<Order> orderList = new ArrayList<>();
-//        if(partnerOrderMap.containsKey(partnerId)) {
-//            for (String orderId : partnerOrderMap.get(partnerId)) {
-//                Order order = orderMap.get(orderId);
-//                orderList.add(order);
-//            }
-//        }
-//        return orderList;
     }
 
 
     //Get List of all orders in the system
-    public List<String> getAllOrders() {                        // check 2 --> for String instead of Order Object
+    public List<String> getAllOrders() {              // check 2 --> for String instead of Order Object
         return new ArrayList<>(orderMap.keySet());
     }
 
 
     //Get count of orders which are not assigned to any partner
     public int getCountOfUnassignedOrders() {
-        // i will take all Orders which are assigned to all the Partners into Set
-        HashSet<String> allOrders = new HashSet<>();
-        for (List<String> orders : partnerOrderMap.values()) {
-            for (String order : orders) {
-                allOrders.add(order);
-            }
-        }
-
-        int count = 0;
-        for (String order : orderMap.keySet()) {
-            if(!allOrders.contains(order))
-                count++;
-        }
-        return count;
-
 //        int totalOrders = orderMap.size();              // check this approach
 //        int assignedOrders = 0;
 //
@@ -126,6 +97,9 @@ public class OrderRepository {
 //
 //        int unassignedOrders = totalOrders - assignedOrders;
 //        return unassignedOrders;
+
+        int totalOrders = orderMap.size();
+        return totalOrders - countOfOrdersAssignedToAllPartners;
     }
 
 

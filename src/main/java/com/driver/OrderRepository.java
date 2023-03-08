@@ -91,18 +91,19 @@ public class OrderRepository {
 
     //Get count of orders which are not assigned to any partner
     public int getCountOfUnassignedOrders() {
-        int totalOrders = orderMap.size();              // check this approach
-        int assignedOrders = 0;
+//        int totalOrders = orderMap.size();              // check this approach
+//        int assignedOrders = 0;
+//
+//        for (String orders : partnerOrderMap.keySet()) {
+//            assignedOrders += partnerOrderMap.get(orders).size();
+//        }
+//
+//        int unassignedOrders = totalOrders - assignedOrders;
+//        return unassignedOrders;
 
-        for (String orders : partnerOrderMap.keySet()) {
-            assignedOrders += partnerOrderMap.get(orders).size();
-        }
-
-        int unassignedOrders = totalOrders - assignedOrders;
+        int totalOrders = orderMap.size();
+        int unassignedOrders = totalOrders - orderAssignedToAPartner.size();
         return unassignedOrders;
-
-//        int totalOrders = orderMap.size();
-//        return totalOrders - countOfOrdersAssignedToAllPartners;
     }
 
 

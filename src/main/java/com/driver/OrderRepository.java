@@ -46,7 +46,7 @@ public class OrderRepository {
             if(partnerOrderMap.containsKey(partnerId))
                 orderList = partnerOrderMap.get(partnerId);
             orderList.add(orderId);
-            countOfOrdersAssignedToAllPartners++;
+            countOfOrdersAssignedToAllPartners += orderList.size();
             partnerOrderMap.put(partnerId, orderList);
 
             // now i have to increase the orders count also
@@ -88,18 +88,18 @@ public class OrderRepository {
 
     //Get count of orders which are not assigned to any partner
     public int getCountOfUnassignedOrders() {
-        int totalOrders = orderMap.size();              // check this approach
-        int assignedOrders = 0;
+//        int totalOrders = orderMap.size();              // check this approach
+//        int assignedOrders = 0;
+//
+//        for (String orders : partnerOrderMap.keySet()) {
+//            assignedOrders += partnerOrderMap.get(orders).size();
+//        }
+//
+//        int unassignedOrders = totalOrders - assignedOrders;
+//        return unassignedOrders;
 
-        for (String orders : partnerOrderMap.keySet()) {
-            assignedOrders += partnerOrderMap.get(orders).size();
-        }
-
-        int unassignedOrders = totalOrders - assignedOrders;
-        return unassignedOrders;
-
-//        int totalOrders = orderMap.size();
-//        return totalOrders - countOfOrdersAssignedToAllPartners;
+        int totalOrders = orderMap.size();
+        return totalOrders - countOfOrdersAssignedToAllPartners;
     }
 
 

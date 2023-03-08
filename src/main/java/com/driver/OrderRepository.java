@@ -20,13 +20,16 @@ public class OrderRepository {
 
 //    private Map<String, List<Order>> partnerOrderObjectMap;
 
-    int countOfOrdersAssignedToAllPartners = 0;
+//    int countOfOrdersAssignedToAllPartners = 0;
+
+    //for Optimization
+    Map<String, String> orderAssignedToAPartner;
 
     public OrderRepository() {
         this.orderMap = new HashMap<String, Order>();
         this.deliveryPartnerMap = new HashMap<String, DeliveryPartner>();
         this.partnerOrderMap = new HashMap<String, List<String>>();
-//        this.partnerOrderObjectMap = new HashMap<>();
+        this.orderAssignedToAPartner = new HashMap<String,String>();
     }
 
 
@@ -46,8 +49,8 @@ public class OrderRepository {
             if(partnerOrderMap.containsKey(partnerId))
                 orderList = partnerOrderMap.get(partnerId);
             orderList.add(orderId);
-            countOfOrdersAssignedToAllPartners += orderList.size();
             partnerOrderMap.put(partnerId, orderList);
+            orderAssignedToAPartner.put(orderId, partnerId); //this order is assigned to this partner
 
             // now i have to increase the orders count also
             // ek order bad gaya to numberOfOrders me bhi 1 badana padega
@@ -88,18 +91,18 @@ public class OrderRepository {
 
     //Get count of orders which are not assigned to any partner
     public int getCountOfUnassignedOrders() {
-//        int totalOrders = orderMap.size();              // check this approach
-//        int assignedOrders = 0;
-//
-//        for (String orders : partnerOrderMap.keySet()) {
-//            assignedOrders += partnerOrderMap.get(orders).size();
-//        }
-//
-//        int unassignedOrders = totalOrders - assignedOrders;
-//        return unassignedOrders;
+        int totalOrders = orderMap.size();              // check this approach
+        int assignedOrders = 0;
 
-        int totalOrders = orderMap.size();
-        return totalOrders - countOfOrdersAssignedToAllPartners;
+        for (String orders : partnerOrderMap.keySet()) {
+            assignedOrders += partnerOrderMap.get(orders).size();
+        }
+
+        int unassignedOrders = totalOrders - assignedOrders;
+        return unassignedOrders;
+
+//        int totalOrders = orderMap.size();
+//        return totalOrders - countOfOrdersAssignedToAllPartners;
     }
 
 
@@ -169,8 +172,23 @@ public class OrderRepository {
         if(orderMap.containsKey(orderId))
             orderMap.remove(orderId);
 
-        for (String partnerId : partnerOrderMap.keySet()) {
-            List<String> ordersList = partnerOrderMap.get(partnerId);
+        //O(N*N) Approach
+//        for (String partnerId : partnerOrderMap.keySet()) {
+//            List<String> ordersList = partnerOrderMap.get(partnerId);
+//            for (String order : ordersList) {
+//                if(order.equals(orderId)) {
+//                    ordersList.remove(orderId);
+//                    partnerOrderMap.put(partnerId, ordersList);
+//                    DeliveryPartner deliveryPartner = deliveryPartnerMap.get(partnerId);
+//                    deliveryPartner.setNumberOfOrders(deliveryPartner.getNumberOfOrders() - 1);
+//                    return;
+//                }
+//            }
+//        }
+
+        //Optimized O(N)
+        String partnerId = orderAssignedToAPartner.get(orderId); //this is a partner of this order
+        List<String> ordersList = partnerOrderMap.get(partnerId);
             for (String order : ordersList) {
                 if(order.equals(orderId)) {
                     ordersList.remove(orderId);
@@ -180,7 +198,7 @@ public class OrderRepository {
                     return;
                 }
             }
-        }
+
     }
 
 }
